@@ -17,6 +17,16 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Middleware (Must be before routes)
+app.use(cors());
+app.use(express.json());
+
+// Request logging
+app.use((req, _res, next) => {
+    console.log(`${new Date().toISOString()} ${req.method} ${req.path}`);
+    next();
+});
+
 // Initialize database and start server
 async function startServer() {
     try {
@@ -31,16 +41,6 @@ async function startServer() {
 }
 
 startServer();
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// Request logging
-app.use((req, _res, next) => {
-    console.log(`${new Date().toISOString()} ${req.method} ${req.path}`);
-    next();
-});
 
 // Routes
 app.use('/api/auth', authRoutes);
