@@ -1,0 +1,111 @@
+/* DMRC Tricolor Theme */
+:root {
+  --dmrc-primary: #138808;   /* Green */
+  --dmrc-accent: #FF9933;   /* Saffron */
+  --dmrc-bg: #f5f5f5;       /* Light grey */
+  --dmrc-text: #212529;     /* Dark text */
+  --dmrc-card-bg: rgba(255, 255, 255, 0.8);
+  --dmrc-card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --dmrc-font: 'Inter', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--dmrc-font);
+  background: var(--dmrc-bg);
+  color: var(--dmrc-text);
+  line-height: 1.5;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 240px;
+  background: linear-gradient(180deg, var(--dmrc-primary), var(--dmrc-accent));
+  color: white;
+  padding-top: 2rem;
+  overflow-y: auto;
+}
+.sidebar a {
+  display: block;
+  padding: 0.75rem 1.5rem;
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+.sidebar a:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+/* Main content */
+.main {
+  margin-left: 260px;
+  padding: 2rem;
+}
+
+/* KPI Card */
+.kpi-card {
+  background: var(--dmrc-card-bg);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  box-shadow: var(--dmrc-card-shadow);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: transform 0.2s ease;
+}
+.kpi-card:hover {
+  transform: translateY(-4px);
+}
+.kpi-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--dmrc-primary);
+}
+.kpi-label {
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  color: var(--dmrc-text);
+}
+
+/* Form styling */
+.form-group {
+  margin-bottom: 1rem;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: var(--dmrc-font);
+}
+
+button {
+  background: var(--dmrc-primary);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+button:hover {
+  background: var(--dmrc-accent);
+}
