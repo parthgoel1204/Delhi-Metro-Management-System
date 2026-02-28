@@ -27,8 +27,10 @@ Thumbs.db
 # Local configuration files
 *.local
 
-# SQLite database files
+# Database files
 *.db
+*.mdb
+*.ldb
 /data/
 
 # Temporary files
@@ -37,3 +39,7 @@ Thumbs.db
 
 # Gemini AI artifacts (if any)
 .gemini/
+
+# Parcel
+.parcel-cache/
+.cache/
