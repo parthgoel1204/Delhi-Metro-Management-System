@@ -4,6 +4,11 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
+import Register from './pages/Register';
+import Tasks from './pages/Tasks';
+import Analytics from './pages/Analytics';
+import Team from './pages/Team';
+import Calendar from './pages/Calendar';
 
 // Protected Route wrapper — redirects to /login if no authenticated user
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -36,6 +41,7 @@ function AppRoutes() {
     return (
         <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route
                 path="/"
                 element={
@@ -46,10 +52,10 @@ function AppRoutes() {
             >
                 <Route index element={<Navigate to="/dashboard" replace />} />
                 <Route path="dashboard" element={<Dashboard />} />
-                <Route path="tasks" element={<div className="p-8"><h1 className="text-2xl font-bold dark:text-white">Tasks</h1></div>} />
-                <Route path="calendar" element={<div className="p-8"><h1 className="text-2xl font-bold dark:text-white">Calendar</h1></div>} />
-                <Route path="analytics" element={<div className="p-8"><h1 className="text-2xl font-bold dark:text-white">Analytics</h1></div>} />
-                <Route path="team" element={<div className="p-8"><h1 className="text-2xl font-bold dark:text-white">Team Deployment</h1></div>} />
+                <Route path="tasks" element={<Tasks />} />
+                <Route path="calendar" element={<Calendar />} />
+                <Route path="analytics" element={<Analytics />} />
+                <Route path="team" element={<Team />} />
             </Route>
             {/* Catch-all */}
             <Route path="*" element={<Navigate to="/dashboard" replace />} />

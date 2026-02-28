@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Bell, Sun, Moon, ChevronDown, MapPin, Building2 } from 'lucide-react';
+import { Sun, Moon, ChevronDown, MapPin, Building2 } from 'lucide-react';
 import { useAuth, AuthUser } from '../context/AuthContext';
 import api from '../api';
 
@@ -115,11 +115,6 @@ const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode }) => {
                         {darkMode ? <Sun size={20} /> : <Moon size={20} />}
                     </button>
 
-                    {/* Notifications */}
-                    <button className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors relative">
-                        <Bell size={20} />
-                        <span className="absolute top-1.5 right-1.5 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white dark:ring-slate-900" />
-                    </button>
                 </div>
 
                 {/* User Profile */}

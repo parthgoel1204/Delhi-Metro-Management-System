@@ -42,4 +42,5 @@ Thumbs.db
 
 # Parcel
 .parcel-cache/
-.cache/
+.cache/client/.parcel-cache/
+client/dist/

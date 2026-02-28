@@ -126,3 +126,5 @@ const ChemicalsModule = ({ stationId }: { stationId: number | null }) => {
 };
 
 export default ChemicalsModule;
+
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiIsInN0YXRpb25faWQiOm51bGwsImZ1bGxfbmFtZSI6IlN5c3RlbSBBZG1pbmlzdHJhdG9yIiwiaWF0IjoxNzcyMjY0ODA3LCJleHAiOjE3NzIzNTEyMDd9.ggEazNDRKWDKc3fqN_wr2EPBlhlVD4ZoflnFNLvW74k

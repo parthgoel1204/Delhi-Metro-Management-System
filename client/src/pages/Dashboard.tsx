@@ -146,7 +146,7 @@ const Dashboard = () => {
 
                 {/* Waste Chart + Progress Ring */}
                 <div className="col-span-12 xl:col-span-8">
-                    <WasteModule stationId={selectedStationId} />
+                    <WasteModule stationId={selectedStationId ?? user?.station_id ?? null} />
                 </div>
 
                 <div className="col-span-12 xl:col-span-4">

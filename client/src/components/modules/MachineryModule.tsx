@@ -5,9 +5,10 @@ import { useAuth } from '../../context/AuthContext';
 
 interface Machine {
     id: number;
-    name: string;
-    type: string;
+    machine_name: string;
+    station_id: number;
     status: 'free' | 'occupied' | 'maintenance';
+    station_name?: string;
 }
 
 const statusConfig: Record<Machine['status'], { label: string; cls: string }> = {
@@ -38,7 +39,7 @@ const MachineryModule = ({ stationId }: { stationId: number | null }) => {
         setMachines(ms => ms.map(m => m.id === machine.id ? { ...m, status: newStatus } : m));
         try {
             await api.put(`/machinery/${machine.id}`, { status: newStatus });
-            showToast(`✅ ${machine.name} marked as ${newStatus}.`);
+            showToast(`✅ ${machine.machine_name} marked as ${newStatus}.`);
         } catch {
             setMachines(prev);
             showToast('❌ Update failed. Please try again.');
@@ -86,8 +87,8 @@ const MachineryModule = ({ stationId }: { stationId: number | null }) => {
                     machines.map(machine => (
                         <div key={machine.id} className="flex items-center justify-between py-2 px-3 rounded-lg bg-slate-50 dark:bg-slate-800">
                             <div>
-                                <p className="text-sm font-medium text-slate-700 dark:text-slate-200">{machine.name}</p>
-                                <p className="text-xs text-slate-500 dark:text-slate-400">{machine.type}</p>
+                                <p className="text-sm font-medium text-slate-700 dark:text-slate-200">{machine.machine_name}</p>
+                                <p className="text-xs text-slate-500 dark:text-slate-400">{machine.station_name || 'Station'}</p>
                             </div>
                             {isAdmin ? (
                                 <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${statusConfig[machine.status]?.cls}`}>

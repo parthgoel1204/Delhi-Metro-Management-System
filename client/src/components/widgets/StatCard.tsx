@@ -26,14 +26,6 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, trend, isPositive, is
                 <h3 className={`text-sm font-medium ${isActive ? 'text-blue-100' : 'text-slate-500 dark:text-slate-400'}`}>
                     {title}
                 </h3>
-                <button className={`p-1.5 rounded-full backdrop-blur-md transition-colors
-          ${isActive
-                        ? 'bg-white/20 text-white hover:bg-white/30'
-                        : 'bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700'
-                    }
-        `}>
-                    <ArrowUpRight size={16} className="rotate-45" />
-                </button>
             </div>
 
             <div className="mb-4 relative z-10">

@@ -4,8 +4,8 @@ import { AuthRequest, authenticateToken, requireRole } from '../middleware/auth'
 
 const router = Router();
 
-// Get all stations
-router.get('/', authenticateToken, async (req: Request, res: Response) => {
+// Get all stations — public endpoint (needed for registration page, non-sensitive reference data)
+router.get('/', async (req: Request, res: Response) => {
     try {
         const result = await db.query('SELECT * FROM stations ORDER BY name');
         res.json(result.rows);

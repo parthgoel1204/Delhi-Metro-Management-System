@@ -62,7 +62,7 @@ export async function initializeDatabase(): Promise<void> {
         id SERIAL PRIMARY KEY,
         station_id INTEGER NOT NULL,
         machine_name VARCHAR(100) NOT NULL,
-        status VARCHAR(20) NOT NULL DEFAULT 'free' CHECK(status IN ('free', 'occupied')),
+        status VARCHAR(20) NOT NULL DEFAULT 'free' CHECK(status IN ('free', 'occupied', 'maintenance')),
         last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_by INTEGER,
         FOREIGN KEY (station_id) REFERENCES stations(id) ON DELETE CASCADE,
