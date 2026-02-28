@@ -30,14 +30,15 @@ app.use((req, _res, next) => {
 
 // Initialize database and start server
 async function startServer() {
+    app.listen(PORT, () => {
+        console.log(`🚇 DMRC Housekeeping Server running on http://localhost:${PORT}`);
+    });
+
     try {
         await initializeDatabase();
-        app.listen(PORT, () => {
-            console.log(`🚇 DMRC Housekeeping Server running on http://localhost:${PORT}`);
-        });
+        console.log('✅ Database initialized successfully.');
     } catch (err) {
-        console.error('Failed to start server:', err);
-        process.exit(1);
+        console.error('Failed to initialize database (Server is still running, requests may fail):', err);
     }
 }
 
