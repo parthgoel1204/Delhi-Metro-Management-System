@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 import dotenv from 'dotenv';
 import { initializeDatabase } from './db';
 
@@ -54,6 +55,19 @@ app.use('/api/waste', wasteRoutes);
 // Health check
 app.get('/api/health', (_req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// Serve frontend static files in production
+const clientDistPath = path.join(__dirname, '../../client/dist');
+app.use(express.static(clientDistPath));
+
+// Catch-all route to serve React app for non-API requests
+app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+        res.sendFile(path.join(clientDistPath, 'index.html'));
+    } else {
+        res.status(404).json({ error: 'API route not found' });
+    }
 });
 
 // Error handler

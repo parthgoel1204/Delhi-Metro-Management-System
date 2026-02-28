@@ -2,7 +2,8 @@ import axios from 'axios';
 
 // Create a configured Axios instance pointing to the backend
 const api = axios.create({
-    baseURL: 'http://localhost:3001/api', // Backend URL
+    // @ts-ignore
+    baseURL: process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:3001/api', // Backend URL
     timeout: 5000,
     headers: {
         'Content-Type': 'application/json'
