@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FlaskConical, Plus } from 'lucide-react';
+import { FlaskConical, Plus, Trash2 } from 'lucide-react';
 import api from '../../api';
 import { useAuth } from '../../context/AuthContext';
 
@@ -45,6 +45,17 @@ const ChemicalsModule = ({ stationId }: { stationId: number | null }) => {
             showToast('✅ Chemical usage recorded.');
         } catch {
             showToast('❌ Failed to submit. Please try again.');
+        }
+    };
+
+    const handleDelete = async (id: number) => {
+        if (!window.confirm('Are you sure you want to delete this chemical record?')) return;
+        try {
+            await api.delete(`/chemicals/${id}`);
+            setEntries(prev => prev.filter(e => e.id !== id));
+            showToast('✅ Record deleted.');
+        } catch {
+            showToast('❌ Failed to delete record.');
         }
     };
 
@@ -114,9 +125,16 @@ const ChemicalsModule = ({ stationId }: { stationId: number | null }) => {
                     entries.map(entry => (
                         <div key={entry.id} className="flex items-center justify-between py-2 px-3 rounded-lg bg-slate-50 dark:bg-slate-800">
                             <p className="text-sm font-medium text-slate-700 dark:text-slate-200">{entry.chemical_name}</p>
-                            <span className="text-xs font-semibold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 px-2 py-0.5 rounded-full">
-                                {entry.quantity} {entry.unit}
-                            </span>
+                            <div className="flex items-center gap-3">
+                                <span className="text-xs font-semibold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 px-2 py-0.5 rounded-full">
+                                    {entry.quantity} {entry.unit}
+                                </span>
+                                {isAdmin && (
+                                    <button onClick={() => handleDelete(entry.id)} className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
+                                        <Trash2 size={15} />
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     ))
                 )}

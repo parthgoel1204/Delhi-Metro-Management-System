@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Plus } from 'lucide-react';
+import { Users, Plus, Trash2 } from 'lucide-react';
 import api from '../../api';
 import { useAuth } from '../../context/AuthContext';
 
@@ -56,6 +56,17 @@ const ManpowerModule = ({ stationId }: { stationId: number | null }) => {
             load();
         } catch (err: any) {
             showToast(`❌ ${err.response?.data?.error || 'Submission failed.'}`);
+        }
+    };
+
+    const handleDelete = async (id: number) => {
+        if (!window.confirm('Are you sure you want to delete this manpower record?')) return;
+        try {
+            await api.delete(`/manpower/${id}`);
+            showToast('✅ Record deleted.');
+            load();
+        } catch (err: any) {
+            showToast(`❌ Failed to delete record.`);
         }
     };
 
@@ -136,7 +147,14 @@ const ManpowerModule = ({ stationId }: { stationId: number | null }) => {
                                 <p className="text-sm font-medium text-slate-700 dark:text-slate-200">{r.shift.charAt(0).toUpperCase() + r.shift.slice(1)} Shift</p>
                                 <p className="text-xs text-slate-500 dark:text-slate-400">{r.remarks || new Date(r.date).toLocaleDateString('en-IN')}</p>
                             </div>
-                            <span className="text-sm font-bold text-dmrc-cobalt dark:text-blue-400">{r.staff_count} staff</span>
+                            <div className="flex items-center gap-3">
+                                <span className="text-sm font-bold text-dmrc-cobalt dark:text-blue-400">{r.staff_count} staff</span>
+                                {isAdmin && (
+                                    <button onClick={() => handleDelete(r.id)} className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
+                                        <Trash2 size={15} />
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     ))
                 )}

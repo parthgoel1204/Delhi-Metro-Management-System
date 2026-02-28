@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trash2, Plus } from 'lucide-react';
+import { Trash2, Plus, List, BarChart3 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import api from '../../api';
 import { useAuth } from '../../context/AuthContext';
@@ -28,8 +28,10 @@ const WasteModule = ({ stationId }: { stationId: number | null }) => {
     const [chartData, setChartData] = useState<ChartData[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [showForm, setShowForm] = useState(false);
+    const [viewMode, setViewMode] = useState<'chart' | 'list'>('chart');
     const [toast, setToast] = useState<string | null>(null);
     const [form, setForm] = useState({ waste_type: 'wet' as typeof WASTE_TYPES[number], quantity_kg: '', treatment_method: 'Composting' });
+    const [rawRecords, setRawRecords] = useState<WasteRecord[]>([]);
 
     const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(null), 3000); };
 
@@ -39,6 +41,7 @@ const WasteModule = ({ stationId }: { stationId: number | null }) => {
         api.get(`/waste${params}`)
             .then(res => {
                 const records: WasteRecord[] = res.data || [];
+                setRawRecords(records.slice(0, 10)); // keep recent for list
                 // Group last 7 entries by date for chart
                 const grouped: Record<string, ChartData> = {};
                 records.slice(-21).forEach(r => {
@@ -76,6 +79,17 @@ const WasteModule = ({ stationId }: { stationId: number | null }) => {
         }
     };
 
+    const handleDelete = async (id: number) => {
+        if (!window.confirm('Are you sure you want to delete this waste record?')) return;
+        try {
+            await api.delete(`/waste/${id}`);
+            showToast('✅ Record deleted.');
+            load();
+        } catch {
+            showToast('❌ Failed to delete record.');
+        }
+    };
+
     return (
         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 h-full flex flex-col shadow-sm relative">
             {toast && (
@@ -92,12 +106,20 @@ const WasteModule = ({ stationId }: { stationId: number | null }) => {
                         <p className="text-xs text-slate-500 dark:text-slate-400">Weekly Trend (kg)</p>
                     </div>
                 </div>
-                {!isAdmin && (
-                    <button onClick={() => setShowForm(p => !p)}
-                        className="flex items-center gap-1 text-xs bg-dmrc-navy text-white px-3 py-1.5 rounded-lg font-semibold hover:bg-dmrc-cobalt transition-colors">
-                        <Plus size={13} /> Log Today
-                    </button>
-                )}
+                <div className="flex gap-2">
+                    {isAdmin && (
+                        <button onClick={() => setViewMode(v => v === 'chart' ? 'list' : 'chart')}
+                            className="p-1.5 text-slate-400 hover:text-dmrc-cobalt hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors" title="Toggle View">
+                            {viewMode === 'chart' ? <List size={16} /> : <BarChart3 size={16} />}
+                        </button>
+                    )}
+                    {!isAdmin && (
+                        <button onClick={() => setShowForm(p => !p)}
+                            className="flex items-center gap-1 text-xs bg-dmrc-navy text-white px-3 py-1.5 rounded-lg font-semibold hover:bg-dmrc-cobalt transition-colors">
+                            <Plus size={13} /> Log Today
+                        </button>
+                    )}
+                </div>
             </div>
 
             {/* Staff Entry Form — one entry per waste type */}
@@ -136,6 +158,27 @@ const WasteModule = ({ stationId }: { stationId: number | null }) => {
                         <Trash2 size={36} className="mb-3 opacity-30" />
                         <p className="text-sm font-medium">No waste logs this week</p>
                         <p className="text-xs mt-1">{isAdmin ? 'No data reported yet.' : 'Click "Log Today" to add your first entry.'}</p>
+                    </div>
+                ) : viewMode === 'list' && isAdmin ? (
+                    <div className="h-full overflow-y-auto space-y-2">
+                        {rawRecords.length === 0 ? (
+                            <div className="text-center py-6 text-slate-400"><p className="text-sm">No recent logs.</p></div>
+                        ) : (
+                            rawRecords.map(r => (
+                                <div key={r.id} className="flex items-center justify-between py-2 px-3 rounded-lg bg-slate-50 dark:bg-slate-800">
+                                    <div>
+                                        <p className="text-sm font-medium text-slate-700 dark:text-slate-200 capitalize">{r.waste_type} Waste</p>
+                                        <p className="text-xs text-slate-500">{new Date(r.date).toLocaleDateString()} • {r.treatment_method}</p>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-sm font-bold text-dmrc-cobalt dark:text-blue-400">{r.quantity_kg} kg</span>
+                                        <button onClick={() => handleDelete(r.id)} className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors">
+                                            <Trash2 size={15} />
+                                        </button>
+                                    </div>
+                                </div>
+                            ))
+                        )}
                     </div>
                 ) : (
                     <ResponsiveContainer width="100%" height="100%">

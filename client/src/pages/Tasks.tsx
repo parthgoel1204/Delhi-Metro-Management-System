@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ClipboardList, Plus, CheckCircle, XCircle } from 'lucide-react';
+import { ClipboardList, Plus, CheckCircle, XCircle, Trash2 } from 'lucide-react';
 import api from '../api';
 import { useAuth } from '../context/AuthContext';
 
@@ -91,6 +91,17 @@ const Tasks = () => {
             load();
         } catch (err: any) {
             showToast(`❌ ${err.response?.data?.error || 'Submission failed.'}`);
+        }
+    };
+
+    const handleDelete = async (id: number) => {
+        if (!window.confirm('Are you sure you want to delete this log entry?')) return;
+        try {
+            await api.delete(`/manpower/${id}`);
+            showToast('✅ Log entry deleted.');
+            load();
+        } catch {
+            showToast('❌ Failed to delete entry.');
         }
     };
 
@@ -224,7 +235,7 @@ const Tasks = () => {
                                 <table className="w-full text-sm">
                                     <thead className="bg-slate-50 dark:bg-slate-800">
                                         <tr>
-                                            {['Worker', 'Role', isAdmin ? 'Station' : null, 'Status', 'Date'].filter(Boolean).map(h =>
+                                            {['Worker', 'Role', isAdmin ? 'Station' : null, 'Status', 'Date', isAdmin ? 'Actions' : null].filter(Boolean).map(h =>
                                                 <th key={h!} className="px-6 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{h}</th>
                                             )}
                                         </tr>
@@ -243,6 +254,13 @@ const Tasks = () => {
                                                         </span>
                                                     </td>
                                                     <td className="px-6 py-3 text-slate-400 dark:text-slate-500 text-xs">{new Date(r.date).toLocaleDateString('en-IN')}</td>
+                                                    {isAdmin && (
+                                                        <td className="px-6 py-3">
+                                                            <button onClick={() => handleDelete(r.id)} className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="Delete Log">
+                                                                <Trash2 size={15} />
+                                                            </button>
+                                                        </td>
+                                                    )}
                                                 </tr>
                                             );
                                         })}
@@ -262,7 +280,7 @@ const Tasks = () => {
                             <table className="w-full text-sm">
                                 <thead className="bg-slate-50 dark:bg-slate-800">
                                     <tr>
-                                        {['Date', 'Shift', 'Staff Count', 'Station', 'Remarks'].map(h =>
+                                        {['Date', 'Shift', 'Staff Count', 'Station', 'Remarks', 'Actions'].map(h =>
                                             <th key={h} className="px-6 py-3 text-left text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{h}</th>
                                         )}
                                     </tr>
@@ -277,6 +295,11 @@ const Tasks = () => {
                                             </td>
                                             <td className="px-6 py-3 text-slate-500 dark:text-slate-400">{r.station_name || '—'}</td>
                                             <td className="px-6 py-3 text-slate-400 dark:text-slate-500 text-xs">{r.remarks || '—'}</td>
+                                            <td className="px-6 py-3">
+                                                <button onClick={() => handleDelete(r.id)} className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="Delete Shift Log">
+                                                    <Trash2 size={15} />
+                                                </button>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
